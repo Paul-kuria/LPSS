@@ -13,17 +13,20 @@ today = date.today()
 def plateText(string):
     asc_value = []
     for character in string:
-        ff = (ord(character))
-        if ff > 47:
+        ff = (ord(character):)
+        # if (ff > 47 and ff <58) and (ff >64 and ff < 90) and (ff > 96 and ff < 122):
+        if (ff > 64 and ff < 91) :
+            asc_value.append(ff)
+        if (ff > 47 and ff < 58):
             asc_value.append(ff)
     for i in range(len(asc_value)):
         one = ''.join(chr(i) for i in asc_value)
-    return one
-
+        return one
 
 # pytesseract.pytesseract.tesseract_cmd = '/usr/local/share/tessdata'
 
-path = '/home/pablo/Documents/license_plate/NP/working/foreign2.jpg'
+path = '/home/pablo/Documents/license_plate/NP/working/img4.jpeg'
+path = '/home/pablo/Documents/license_plate/frame_0.png'
 img = cv2.imread(path)
 img = cv2.resize(img, (640,480))
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -69,12 +72,19 @@ print("The Detected Number is: ", plate)
 cv2.imshow("original", Cropped)
 cv2.imshow("blur", edged)
 cv2.imshow("plate", greenpic)
-cv2.waitKey(0)
+cv2.imshow("mask", new_image)
+#cv2.waitKey(0)
 
 #QUERY REG_NO
 
-print(type(plate))
 query_reg((plate,))
+
+if query_reg((plate,)) == 0:
+    print("Access Denied")
+elif query_reg((plate,)) == 1:
+# elif query_reg((plate,)) is not None:
+    print("Welcome Message")
+
 
 
 now = datetime.today()
@@ -82,5 +92,6 @@ d_time = today.strftime("%d/%m/%Y")
 c_time = now.strftime("%H:%M:%S")
 print(d_time,c_time)
 
+cv2.waitKey(0)
 
 
