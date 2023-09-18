@@ -1,5 +1,4 @@
 import sqlite3
-from Logbook import logtime
 
 
 conn = sqlite3.connect('LOGG.db')
