@@ -3,3 +3,6 @@ venv/
 env/
 .venv/
 .env/
+
+# Other files
+**/__pycache__/
