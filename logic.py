@@ -88,7 +88,7 @@ class VideoInfer:
         cnts = imutils.grab_contours(cnts) # Grabs actual contours returned by findContours. Helper Function
         cnts = sorted(cnts, key = cv2.contourArea) # sorts contours by their area in desc order and keeps the largest 10 contours
         screenContour = None # Initialize a variable, used to store the required rectangular shape.
-        # print(cnts)
+
         # Loop over contours:
         for c in cnts:
             perimeter = cv2.arcLength(c, True)
@@ -125,6 +125,5 @@ class VideoInfer:
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()
 
-if __name__ == "__main__":
-    VideoInfer().image_manipulate()
+
     
