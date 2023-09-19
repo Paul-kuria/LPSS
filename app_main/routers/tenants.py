@@ -11,7 +11,7 @@ from ..database import get_db
 router = APIRouter(prefix="/members", tags=["Member"])
 
 '''create member account'''
-@router.post("/", response_model=schemas.MemberLog)
+@router.post("/create", response_model=schemas.MemberLog)
 async def create_record(
     send_info: schemas.MemberLog,
     db: Session = Depends(get_db),
@@ -49,13 +49,16 @@ def update_record(
     update_query = db.query(models.MemberLog).filter(models.MemberLog.vehicle_plate == vehicle_plate)
     upd_record = update_query.first()
 
-    if upd_record == None:
+    if upd_record is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"member with vehicle: {vehicle_plate} does not exist",
         )
     update_query.update(updated_post.model_dump(), synchronize_session=False)
     db.commit()
+    returned_data = update_query.first()
+    if returned_data is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Plate has been updated")
     return update_query.first()
 
 '''Delete one account'''
@@ -79,7 +82,40 @@ def delete_record(
 
 
 '''Retrieve all accounts'''
-@router.get("/", response_model=List[schemas.MemberLog])
+@router.get("/all/", response_model=List[schemas.MemberLog])
 def get_all_records(db: Session = Depends(get_db)):
     records = db.query(models.MemberLog).all()
     return records
+
+'''Bulk Create Accounts'''
+@router.post("/upload", response_model=List[schemas.MemberLog])
+async def upload_multiple_records(
+    upload_records_list: List[schemas.MemberLog], 
+    db: Session = Depends(get_db)
+    ):
+    all_records = []
+    batch_size = 100 
+
+    # Load the records in as List of model objects to be updated
+    for row in upload_records_list:
+        row = row.model_dump()
+        post = models.MemberLog(**row)
+        all_records.append(post) 
+    
+    # Handle transactions
+    try:
+        for i in range(0, len(upload_records_list), batch_size):
+            batch = all_records[i:i+batch_size]
+            try:
+                db.bulk_save_objects(batch)
+                db.commit()
+            except UniqueViolation:
+                db.rollback()
+        return all_records
+    except Exception as e:
+        print(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while uploading records"
+        )
+    

@@ -6,11 +6,11 @@ import uuid
 class MemberLog(Base):
     __tablename__ = "member_registry"
 
-    id = Column(UUID(as_uuid=True), default=uuid.uuid4, unique=True)  # UUID column
+    id = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True)  # UUID column
     name = Column(String, nullable=False)
     vehicle_type = Column(VARCHAR(50), nullable=False)
     vehicle_color = Column(VARCHAR(30), nullable=False) 
-    vehicle_plate = Column(VARCHAR(30), primary_key=True, nullable=False)
+    vehicle_plate = Column(VARCHAR(30), unique=True, nullable=False)
     created_at = Column(
             TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
         )
