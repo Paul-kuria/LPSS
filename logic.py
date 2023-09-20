@@ -72,10 +72,9 @@ class VideoInfer:
         
         screenCnt = None
     
-    def image_manipulate(self):
-        dataset = "./datasets/im1.jpg"
-        im = cv2.imread(dataset)
-        img = cv2.resize(im, self.img_dimensions)
+    def image_manipulate(self, vehicle: str):
+        img = cv2.imread(vehicle)
+        img = cv2.resize(img, self.img_dimensions)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # convert from BGR colorspace to grayscale, simplify the image to a single channel, makes it easier to perform image processing ops
         grayf = cv2.bilateralFilter(gray, 11, 30, 30) # noise reducing technique that preserves edges while smoothing other areas of the image
 
