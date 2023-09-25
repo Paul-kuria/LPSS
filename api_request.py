@@ -84,7 +84,7 @@ def upload_records():
 
 
 if __name__ == "__main__":
-    update_one_record(
-        vehicle_id="KDD001Q", 
-        updated_data=new_member)
-    # upload_records()
+    # update_one_record(
+    #     vehicle_id="KDD001Q", 
+    #     updated_data=new_member)
+    upload_records()
