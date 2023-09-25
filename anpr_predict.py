@@ -7,9 +7,8 @@ import pytesseract
 import easyocr
 from pprint import pprint
 
-load_weights = "./assets/anpr_v2.pt"
-load_images = "./datasets/plates"
-model = YOLO(load_weights)
+
+
 
 class YoloModel:
     def __init__(self, img_source, weights_path) -> None:
@@ -35,6 +34,7 @@ class YoloModel:
         img_names = self.img_source.split('/')[-1]
 
         image = cv2.imread(self.img_source)
+        model = YOLO(self.weights)
         results = model(image)[0]
         detections = sv.Detections.from_yolov8(results)
 
@@ -73,12 +73,18 @@ class YoloModel:
             plate_roi = image[y1: y2, x1: x2]
             
             text = pytesseract.image_to_string(plate_roi, config = '--psm 11')
+            reader = easyocr.Reader(['en'], gpu=False)
+            ocr_result = reader.readtext(plate_roi)
+            ocr_text = ''
+            for result in ocr_result:
+                ocr_text += result[1] + ' '
             try:
-                plate = self.licence_plate_to_text(text)
+                # plate = self.licence_plate_to_text(text)
+                plate = self.licence_plate_to_text(ocr_text)
                 print("The Detected Number is: ", plate)
                 plate_dict[img_names] = plate
-                return plate_dict
-                # return plate
+                # return plate_dict
+                return plate
             except Exception as e:
                 print(f"Error: {e}. Image prediction failed.")
                 pass

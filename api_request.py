@@ -5,10 +5,10 @@ import csv
 
 example_licence = "KCX623S"
 new_member: dict = {
-    "name": "Mike Mann",
-    "vehicle_type" : "Mazda Demio",
-    "vehicle_color" : "Silver",
-    "vehicle_plate" : "KBH143Y"
+    "name": "Dan Kiki",
+    "vehicle_type" : "Blue Alfie",
+    "vehicle_color" : "Blue",
+    "vehicle_plate" : "ZG32540"
 }
 
 '''Fetch One Record'''
@@ -68,7 +68,7 @@ def upload_records():
     url = "http://127.0.0.1:8000/members/upload/"
 
     count = 0
-    with open("./update.csv", 'r') as f:
+    with open("./datasets/member_registry.csv", 'r') as f:
         reader = csv.DictReader(f, delimiter=',')
         rows = list(reader) # Convert to a list of dictionaries
     try:
@@ -84,7 +84,7 @@ def upload_records():
 
 
 if __name__ == "__main__":
-    # update_one_record(
-    #     vehicle_id="b", 
-    #     updated_data=new_member)
-    upload_records()
+    update_one_record(
+        vehicle_id="KDD001Q", 
+        updated_data=new_member)
+    # upload_records()
