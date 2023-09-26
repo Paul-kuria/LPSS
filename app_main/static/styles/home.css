@@ -1,0 +1,71 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.wrapper{
+    width: 100%;
+    margin: auto;
+}
+.header-home{
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),url("../images/farms.jpeg");
+    height: 100vh;
+    -webkit-backdrop-size: cover;
+    background-size: cover;
+    background-position: center center;
+    position: relative; 
+}
+.nav-area{
+    float: right;
+    list-style: none;
+    margin: 30px 10px 0 0;
+} 
+
+.nav-area li{
+    display: inline-block;
+}
+
+.nav-area li a{
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 20px;
+    /* font-family: poppins; */
+    font-size: 16px;
+}
+
+.nav-area li a:hover{
+    background: #fff;
+    color: #333;
+}
+.logo img{
+    width: 200px;
+    float: left;
+    height: auto;
+    margin: 15px 0 0 30px;
+}
+.welcome-text{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 300px;
+    text-align: center;
+}
+.welcome-text h1{
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+.welcome-text a{
+    border: 1px solid #fff;
+    padding: 10px 35px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #fff;
+}
+.welcome-text a:hover{
+    color: #64B58D;
+    border: 1px solid #64B58D;
+}

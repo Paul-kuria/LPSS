@@ -14,7 +14,6 @@ def main():
     for root, dirs, files in os.walk(load_images):
         for file in sorted(files):
             imgpath = os.path.join(root, file)
-            # print(imgpath)
             run = YoloModel(img_source=imgpath, weights_path=load_weights)
             vehicle_plate = run.predict(count)
             result = get_one_record(vehicle_plate)
