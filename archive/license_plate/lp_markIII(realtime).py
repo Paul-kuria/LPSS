@@ -1,25 +1,27 @@
+from datetime import datetime
+
 import cv2
 import imutils
 import numpy as np
 import pytesseract
-from datetime import datetime
+
+pytesseract.pytesseract.tesseract_cmd = (
+    "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+)
 
 
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-
-
-#CREATE A VIDEO CAPTURING OBJECT
+# CREATE A VIDEO CAPTURING OBJECT
 camera_port = 1
 video = cv2.VideoCapture(camera_port, cv2.CAP_DSHOW)
 
-#CAPTURE PHOTO FROM VIDEO
-success,image = video.read()
+# CAPTURE PHOTO FROM VIDEO
+success, image = video.read()
 count = 0
 success = True
 
 #
 first_frame = None
-#check if camera is opened correctly
+# check if camera is opened correctly
 if not video.isOpened():
     raise IOError("Cannot open webcam")
 return_value, image = video.read()
@@ -28,7 +30,7 @@ return_value, image = video.read()
 while True:
     check, frame = video.read()
 
-    #date and time
+    # date and time
     today = datetime.today()
     now = datetime.now()
     dt = str(now)
@@ -37,8 +39,16 @@ while True:
     gray = cv2.bilateralFilter(gray, 11, 30, 30)
     edged = cv2.Canny(gray, 30, 200)
     greenpic = frame.copy()
-    greenpic = cv2.putText(frame, dt, (10,450), cv2.FONT_HERSHEY_COMPLEX, 0.5, (200,220,220), 1, cv2.LINE_8)
-
+    greenpic = cv2.putText(
+        frame,
+        dt,
+        (10, 450),
+        cv2.FONT_HERSHEY_COMPLEX,
+        0.5,
+        (200, 220, 220),
+        1,
+        cv2.LINE_8,
+    )
 
     cnts = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
@@ -58,30 +68,28 @@ while True:
             break
 
     while success:
-        success,frame = video.read()
+        success, frame = video.read()
 
-        #mask the entire picture except for the place where the plate is
+        # mask the entire picture except for the place where the plate is
         mask = np.zeros(gray.shape, np.uint8)
-        new_image = cv2.drawContours(mask, [screenCnt], 0, 255,-1)
+        new_image = cv2.drawContours(mask, [screenCnt], 0, 255, -1)
         new_image = cv2.bitwise_and(frame, frame, mask=mask)
 
-        #now crop
-        (x,y) = np.where(mask == 255)
+        # now crop
+        (x, y) = np.where(mask == 255)
         (topx, topy) = (np.min(x), np.min(y))
         (bottomx, bottomy) = (np.max(x), np.max(y))
-        Cropped = gray[topx:bottomx+1, topy:bottomy+1]
+        Cropped = gray[topx : bottomx + 1, topy : bottomy + 1]
 
-        #character recognition
-        text = pytesseract.image_to_string(Cropped, config = '--psm 11')
+        # character recognition
+        text = pytesseract.image_to_string(Cropped, config="--psm 11")
         print("The Detected Number is: ", text)
 
+        cv2.imshow("License", edged)
+        cv2.imshow("Contour", greenpic)
 
-
-        cv2.imshow('License', edged)
-        cv2.imshow('Contour', greenpic)
-
-        key = cv2.waitKey(1)#every 1 milisecond a new frame will appear
-        if key == ord('q'):
+        key = cv2.waitKey(1)  # every 1 milisecond a new frame will appear
+        if key == ord("q"):
             break
 
 video.release()

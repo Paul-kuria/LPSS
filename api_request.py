@@ -1,28 +1,35 @@
-from typing import List 
+import csv
+import json
+import os
+from typing import List
+
 import requests
-import json 
-import csv 
 
 example_licence = "KCX623S"
 new_member: dict = {
     "name": "Dan Kiki",
-    "vehicle_type" : "Blue Alfie",
-    "vehicle_color" : "Blue",
-    "vehicle_plate" : "ZG32540"
+    "vehicle_type": "Blue Alfie",
+    "vehicle_color": "Blue",
+    "vehicle_plate": "ZG32540",
 }
 
-'''Fetch One Record'''
+"""Fetch One Record"""
+
+
 def get_one_record(vehicle_id):
     url = f"http://127.0.0.1:8000/members/{vehicle_id}"
     try:
         response = requests.get(url)
         if response.status_code == 200:
             member = response.json()
-            print(member) 
+            print(member)
     except Exception as e:
         print(e)
 
-'''Update One Record'''
+
+"""Update One Record"""
+
+
 def update_one_record(vehicle_id: str, updated_data: dict):
     url = f"http://127.0.0.1:8000/members/{vehicle_id}"
     try:
@@ -32,14 +39,17 @@ def update_one_record(vehicle_id: str, updated_data: dict):
         if response.status_code == 200:
             member = response.json()
             print(f"Updated member: {member}")
-        
+
         elif response.status_code == 404:
             print("Member not found.")
 
     except Exception as e:
         print(f"{e}: HTTP request failed with status code: {response.status_code}")
 
-'''Delete One Record'''
+
+"""Delete One Record"""
+
+
 def delete_one_record(vehicle_id):
     url = f"http://127.0.0.1:8000/members/{vehicle_id}"
     try:
@@ -50,27 +60,32 @@ def delete_one_record(vehicle_id):
         print(e)
 
 
-'''Fetch All Records'''
+"""Fetch All Records"""
+
+
 def fetch_records():
     url = "http://127.0.0.1:8000/members/all/"
     try:
         response = requests.get(url)
         if response.status_code == 200:
-            data = response.json() 
+            data = response.json()
             for i in data:
                 print(i)
     except Exception as e:
         print(e)
 
 
-'''Upload Many Records'''
+"""Upload Many Records"""
+
+
 def upload_records():
     url = "http://127.0.0.1:8000/members/upload/"
 
     count = 0
-    with open("./datasets/member_registry.csv", 'r') as f:
-        reader = csv.DictReader(f, delimiter=',')
-        rows = list(reader) # Convert to a list of dictionaries
+    filepath = os.path.join("datasets", "member_registry.csv")
+    with open(filepath, "r") as f:
+        reader = csv.DictReader(f, delimiter=",")
+        rows = list(reader)  # Convert to a list of dictionaries
     try:
         response = requests.post(url, json=rows)
         print(response.text)
@@ -82,9 +97,6 @@ def upload_records():
         print(e)
 
 
-
 if __name__ == "__main__":
-    update_one_record(
-        vehicle_id="KDD001Q", 
-        updated_data=new_member)
+    update_one_record(vehicle_id="KDD001Q", updated_data=new_member)
     # upload_records()

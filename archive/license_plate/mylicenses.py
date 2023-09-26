@@ -1,9 +1,9 @@
 import sqlite3
 
-conn = sqlite3.connect('license.db')
+conn = sqlite3.connect("license.db")
 c = conn.cursor()
 
-#CREATE A TABLE
+# CREATE A TABLE
 # c.execute("""CREATE TABLE storeLicense(
 #             name DATATYPE,
 #             plate DATATYPE,
@@ -19,30 +19,33 @@ c = conn.cursor()
 #     #QUERY THE DATABASE
 #     c.execute("SELECT rowid, * FROM ")
 
-#ADD NEW RECORD TO THE TABLE
+
+# ADD NEW RECORD TO THE TABLE
 def add_one(name, plate, vehicle, registration):
-    conn = sqlite3.connect('license.db')
+    conn = sqlite3.connect("license.db")
     c = conn.cursor()
-    c.execute("INSERT INTO storeLicense VALUES(?,?,?,?)", (name,plate,vehicle,registration))
+    c.execute(
+        "INSERT INTO storeLicense VALUES(?,?,?,?)", (name, plate, vehicle, registration)
+    )
 
     conn.commit()
     conn.close()
 
 
-#DELETE RECORD FROM TABLE
+# DELETE RECORD FROM TABLE
 def delete_one(id):
-    conn = sqlite3.connect('license.db')
+    conn = sqlite3.connect("license.db")
     c = conn.cursor()
-    c.execute("DELETE from storeLicense WHERE rowid = (?)",id)
+    c.execute("DELETE from storeLicense WHERE rowid = (?)", id)
 
     conn.commit()
     conn.close()
 
-#UPDATE RECORD IN TABLE
-def update(name,id):
-    conn = sqlite3.connect('license.db')
+
+# UPDATE RECORD IN TABLE
+def update(name, id):
+    conn = sqlite3.connect("license.db")
     c = conn.cursor()
-    c.execute("UPDATE storeLicense SET name = (?) "
-              "WHERE rowid = (?)", (name,id))
+    c.execute("UPDATE storeLicense SET name = (?) " "WHERE rowid = (?)", (name, id))
     conn.commit()
     conn.close()
